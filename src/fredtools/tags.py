@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Tag:
     def __init__(self, name: str | None = None, **kwargs) -> None:
 
-        self.name: str | None = kwargs.get("name")
+        self.name: str | None = name if name is not None else kwargs.get("name")
         self.group_id: int | None = kwargs.get("group_id")
         self.notes: str | None = kwargs.get("notes")
         self.created: date | None = kwargs.get("created")
