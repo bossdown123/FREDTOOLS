@@ -4,14 +4,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
-import os
-from typing import Any, Callable, Mapping, MutableMapping
+from typing import Any, Callable, Mapping
 from urllib import parse as urlparse
 from urllib import request as urlrequest
 from contextvars import ContextVar
 
+from .logging import get_logger
 
-_current_client: ContextVar[Fred | None] = ContextVar("_current_client", default=None)
+_current_client: ContextVar[Fred | None] = ContextVar(
+    "_current_client",
+    default=None,
+)
+logger = get_logger(__name__)
 
 
 def set_default_client(client: "Fred") -> None:
@@ -35,7 +39,8 @@ def get_current_client() -> Fred:
     client = _current_client.get()
     if client is None:
         raise RuntimeError(
-            "No current Client set. Pass client=... or call set_default_client(...)."
+            "No current Client set. Pass client=... or call "
+            "set_default_client(...)."
         )
     return client
 
@@ -53,6 +58,7 @@ class FredConfig:
     api_key: str
     base_url: str = DEFAULT_BASE_URL
     transport: Transport | None = None
+
 
 class Fred:
     """Client for interacting with the FRED API."""
@@ -111,5 +117,12 @@ class Fred:
         url = self._build_url(endpoint)
         prepared_params = self._build_params(params)
         transport = self._get_transport()
+        scrubbed_params = dict(prepared_params)
+        query_string = urlparse.urlencode(scrubbed_params)
+        scrubbed_url = f"{url}?{query_string}" if query_string else url
+        logger.info(
+            "Requesting %s timeout=%s",
+            scrubbed_url,
+            timeout,
+        )
         return transport(url, prepared_params, timeout)
-

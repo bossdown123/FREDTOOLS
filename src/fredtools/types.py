@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import date
 from typing import Iterable, TYPE_CHECKING
 
@@ -6,18 +6,40 @@ if TYPE_CHECKING:
     import pandas as pd
 
 
-
 @dataclass
-class Release:
-    """Represents a FRED release."""
+class Source:
+    """Represents a data source in FRED."""
 
     id: int
+    name: str
     realtime_start: date
     realtime_end: date
-    name: str
-    press_release: bool
     link: str
 
+
+@dataclass
+class ReleaseTableElement:
+    """Represents a single element within a release table hierarchy."""
+
+    element_id: int
+    release_id: int
+    series_id: str | None
+    parent_id: int | None
+    line: str | None
+    type: str
+    name: str
+    level: int | None
+    children: list["ReleaseTableElement"] = field(default_factory=list)
+
+
+@dataclass
+class ReleaseTable:
+    """Represents a release table with nested elements."""
+
+    name: str | None
+    element_id: int | None
+    release_id: int | None
+    elements: list[ReleaseTableElement] = field(default_factory=list)
 
 
 @dataclass
