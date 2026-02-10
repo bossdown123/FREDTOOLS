@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fredtools"
-version = "0.1.0"
+version = "1.0.0"
 description = "Utilities for working with Fred observations."
 requires-python = ">=3.10"
 authors = [
