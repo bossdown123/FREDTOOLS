@@ -183,7 +183,7 @@ def test_series_updates_returns_series(make_stub_client) -> None:
 
 def test_series_vintage_dates_returns_dates(make_stub_client) -> None:
     response = {"vintage_dates": ["2020-03-01", "2020-03-15"]}
-    stub = make_stub_client([StubResponse("series/vintage_dates", response)])
+    stub = make_stub_client([StubResponse("series/vintagedates", response)])
     dates = make_series().vintage_dates(sort_order="asc")
     assert dates == [date(2020, 3, 1), date(2020, 3, 15)]
     stub.assert_complete()
