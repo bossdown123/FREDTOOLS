@@ -277,8 +277,13 @@ class Series:
             "sort_order": sort_order,
         }
 
-        response = client.request("series/vintage_dates", params=params).get("vintage_dates", [])
-        return [datetime.strptime(vintage_date, "%Y-%m-%d").date() for vintage_date in response]
+        response = client.request("series/vintagedates", params=params).get(
+            "vintage_dates", []
+        )
+        return [
+            datetime.strptime(vintage_date, "%Y-%m-%d").date()
+            for vintage_date in response
+        ]
     
     def info(self) -> Series:
         client = get_current_client()
