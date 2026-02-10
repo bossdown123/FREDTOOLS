@@ -33,6 +33,7 @@ jobs:
             ib_async \
             simfin \
             "pandas<3"
+          pip install -e .[test]
 
       - name: Run Tests
         run: pytest -q
